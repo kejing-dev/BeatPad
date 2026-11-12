@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">节奏鼓台</string>
+    <string name="tab_play">演奏</string>
+    <string name="tab_library">节拍库</string>
+    <string name="tab_settings">设置</string>
+
+    <string name="status_d0">鼓搬好了，调个音。</string>
+    <string name="status_d1_empty">敲一下面前的鼓。手柄就是鼓棒。</string>
+    <string name="status_d1_beat">准备好就按「录」，或者先听一遍。</string>
+    <string name="status_d2">听四声嗒，第五下开始。</string>
+    <string name="status_d3">接着敲，敲的都会留在圈上。</string>
+    <string name="status_d4">它在自己打了。再录一层？</string>
+    <string name="status_d5">拖到别的格子挪拍子，拖出圈就删掉。</string>
+    <string name="status_d6">按住台子拖，摇杆左右转。</string>
+    <string name="status_d7">点你想换声音的那个鼓垫。</string>
+    <string name="status_d1_tip">按「录」，听四声嗒，接着敲。</string>
+    <string name="deck_right_hint">鼓台在你右手边，转过去就是。</string>
+    <string name="deck_left_hint">鼓台在你左手边，转过去就是。</string>
+
+    <string name="ring_d0">鼓搬好了，调个音</string>
+    <string name="ring_d1_empty">敲一下试试</string>
+    <string name="ring_d1_beat">按录开始</string>
+    <string name="ring_d2">四声嗒后开始</string>
+    <string name="ring_d3">接着敲</string>
+    <string name="ring_d4">再录一层？</string>
+    <string name="ring_d5">拖动挪拍子</string>
+    <string name="ring_d6">按住台子拖</string>
+    <string name="ring_d7">点要换声音的鼓垫</string>
+    <string name="ring_release_delete">松手删掉</string>
+
+    <string name="btn_rec">录</string>
+    <string name="btn_stop_rec">停录</string>
+    <string name="btn_cancel_count">取消</string>
+    <string name="btn_play">播放</string>
+    <string name="btn_stop">停</string>
+    <string name="btn_undo">撤销</string>
+    <string name="mute">静音</string>
+    <string name="unmute">取消静音</string>
+    <string name="bpm_label">%d BPM</string>
+    <string name="beat_unsaved">我的这段</string>
+
+    <string name="beat_blank">空白节拍</string>
+    <string name="beat_blank_tag">从零开始</string>
+    <string name="my_beat">我的节拍 %d</string>
+    <string name="slot_empty">空位 %d</string>
+    <string name="slot_empty_tag">把这段存进来</string>
+    <string name="card_meta">%1$d BPM · %2$s</string>
+    <string name="card_count">%1$d / %2$d</string>
+    <string name="card_tap">点一下载入</string>
+    <string name="btn_save_new">存到新空位</string>
+    <string name="btn_save_here">存到这里</string>
+    <string name="slot_has_beat">这一格已有节拍。</string>
+    <string name="btn_overwrite">覆盖</string>
+    <string name="btn_clear_slot">清空这一格</string>
+    <string name="btn_cancel">取消</string>
+    <string name="prev">上一张</string>
+    <string name="next">下一张</string>
+
+    <string name="notice_saved">存好了：我的节拍 %s</string>
+    <string name="notice_full">满了，翻到一格覆盖它。</string>
+    <string name="notice_empty_play">环是空的，先录一层。</string>
+    <string name="notice_stop_first">先停下再来。</string>
+    <string name="notice_loaded_next">下一小节开头换上。</string>
+    <string name="import_ok">换上了：%1$s（%2$s 秒）</string>
+    <string name="import_fail">这个文件打不开，换个 wav 或 mp3 试试。</string>
+    <string name="import_long">超过 4 秒了，只取前 4 秒。</string>
+    <string name="restored">换回默认声音了。</string>
+    <string name="no_files">没找到声音文件。</string>
+
+    <string name="set_sound">声音…</string>
+    <string name="set_kit">鼓与手感…</string>
+    <string name="set_more">更多…</string>
+    <string name="btn_exit_app">退出应用</string>
+    <string name="exit_ask">退出节奏鼓台？</string>
+    <string name="btn_exit">退出</string>
+    <string name="btn_back">返回</string>
+    <string name="set_master">总音量</string>
+    <string name="set_metro">节拍器音量</string>
+    <string name="metro_mode">节拍器：%s</string>
+    <string name="metro_countin">只在预备拍</string>
+    <string name="metro_always">一直响</string>
+    <string name="metro_off">关</string>
+    <string name="kit_row">鼓组：%s</string>
+    <string name="btn_pad_sound">给一个鼓垫换上自己的声音…</string>
+    <string name="feel_row">力度：%s</string>
+    <string name="feel_light">轻手</string>
+    <string name="feel_normal">标准</string>
+    <string name="feel_heavy">重手</string>
+    <string name="pad_sound_title">给 %s 换声音</string>
+    <string name="pad_sound_now">现在用：%s</string>
+    <string name="sound_default">默认</string>
+    <string name="btn_import">从文件导入…</string>
+    <string name="btn_restore">恢复默认</string>
+    <string name="lang_row">语言：%s</string>
+    <string name="lang_system">跟随系统</string>
+    <string name="lang_zh">中文</string>
+    <string name="lang_en">English</string>
+    <string name="btn_place">摆鼓台…</string>
+    <string name="btn_about">关于</string>
+    <string name="about_version">节奏鼓台 %s</string>
+    <string name="about_license">字体 Noto Sans（OFL）。鼓声：freesound.org 的 CC0 录音；节拍器和提示音：Kenney CC0。</string>
+    <string name="btn_coach">再看一遍引导</string>
+
+    <string name="btn_turn_left">左转 15°</string>
+    <string name="btn_turn_right">右转 15°</string>
+    <string name="btn_front">回到面前</string>
+    <string name="btn_panel_right">面板换到右边</string>
+    <string name="btn_panel_left">面板换到左边</string>
+    <string name="btn_place_done">放好了</string>
+
+    <string name="open_panel">打开面板</string>
+    <string name="level_hint">平视前方</string>
+    <string name="btn_recall">叫回面前</string>
+    <string name="load_ask">这段还没存，换掉吗？</string>
+    <string name="btn_replace">换掉</string>
+    <string name="front_wait">转到你想要的正前方，停一下。</string>
+    <string name="exit_note">存过的节拍都在节拍库里。</string>
+</resources>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BeatPad</string>
+    <string name="tab_play">Drums</string>
+    <string name="tab_library">Beats</string>
+    <string name="tab_settings">Settings</string>
+
+    <string name="status_d0">Setting up the kit.</string>
+    <string name="status_d1_empty">Hit a pad. Your controller\'s the stick.</string>
+    <string name="status_d1_beat">Hit Record when you\'re ready, or play it first.</string>
+    <string name="status_d2">Four clicks, then you\'re on.</string>
+    <string name="status_d3">Keep going. Every hit stays on the ring.</string>
+    <string name="status_d4">It\'s playing itself now. Add a layer?</string>
+    <string name="status_d5">Slide to move it. Drag it off to drop it.</string>
+    <string name="status_d6">Hold to drag the deck. Stick left or right to turn.</string>
+    <string name="status_d7">Tap the pad you want to change.</string>
+    <string name="status_d1_tip">Tap Record, wait for four clicks, then play.</string>
+    <string name="deck_right_hint">The deck is on your right. Turn to face it.</string>
+    <string name="deck_left_hint">The deck is on your left. Turn to face it.</string>
+
+    <string name="ring_d0">Tuning up</string>
+    <string name="ring_d1_empty">hit a pad</string>
+    <string name="ring_d1_beat">tap Rec to start</string>
+    <string name="ring_d2">4 clicks, then go</string>
+    <string name="ring_d3">keep playing</string>
+    <string name="ring_d4">add a layer?</string>
+    <string name="ring_d5">drag to move</string>
+    <string name="ring_d6">Drag the deck</string>
+    <string name="ring_d7">Tap a pad to change</string>
+    <string name="ring_release_delete">Let go to delete</string>
+
+    <string name="btn_rec">Record</string>
+    <string name="btn_stop_rec">Stop rec</string>
+    <string name="btn_cancel_count">Cancel</string>
+    <string name="btn_play">Play</string>
+    <string name="btn_stop">Stop</string>
+    <string name="btn_undo">Undo</string>
+    <string name="mute">Mute</string>
+    <string name="unmute">Unmute</string>
+    <string name="bpm_label">%d BPM</string>
+    <string name="beat_unsaved">Your beat</string>
+
+    <string name="beat_blank">Blank beat</string>
+    <string name="beat_blank_tag">Start from scratch</string>
+    <string name="my_beat">My beat %d</string>
+    <string name="slot_empty">Empty slot %d</string>
+    <string name="slot_empty_tag">Save a beat here</string>
+    <string name="card_meta">%1$d BPM · %2$s</string>
+    <string name="card_count">%1$d / %2$d</string>
+    <string name="card_tap">Tap to load</string>
+    <string name="btn_save_new">Save to a new slot</string>
+    <string name="btn_save_here">Save here</string>
+    <string name="slot_has_beat">This slot already has a beat.</string>
+    <string name="btn_overwrite">Overwrite</string>
+    <string name="btn_clear_slot">Clear slot</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="prev">Previous</string>
+    <string name="next">Next</string>
+
+    <string name="notice_saved">Saved: My beat %s</string>
+    <string name="notice_full">All full. Pick a slot to overwrite.</string>
+    <string name="notice_empty_play">Nothing on the ring yet. Record a layer first.</string>
+    <string name="notice_stop_first">Stop the loop first.</string>
+    <string name="notice_loaded_next">Switching at the next bar.</string>
+    <string name="import_ok">Swapped in: %1$s (%2$s s)</string>
+    <string name="import_fail">Can\'t open that file. Try a wav or mp3.</string>
+    <string name="import_long">Over 4 seconds, so we kept the first 4.</string>
+    <string name="restored">Back to the default sound.</string>
+    <string name="no_files">No sound files found.</string>
+
+    <string name="set_sound">Sound…</string>
+    <string name="set_kit">Drums &amp; feel…</string>
+    <string name="set_more">More…</string>
+    <string name="btn_exit_app">Quit app</string>
+    <string name="exit_ask">Quit BeatPad?</string>
+    <string name="btn_exit">Quit</string>
+    <string name="btn_back">Back</string>
+    <string name="set_master">Volume</string>
+    <string name="set_metro">Click volume</string>
+    <string name="metro_mode">Click: %s</string>
+    <string name="metro_countin">count-in only</string>
+    <string name="metro_always">always</string>
+    <string name="metro_off">off</string>
+    <string name="kit_row">Kit: %s</string>
+    <string name="btn_pad_sound">Your own sound on a pad…</string>
+    <string name="feel_row">Touch: %s</string>
+    <string name="feel_light">light hands</string>
+    <string name="feel_normal">normal</string>
+    <string name="feel_heavy">heavy hands</string>
+    <string name="pad_sound_title">New sound for %s</string>
+    <string name="pad_sound_now">Now: %s</string>
+    <string name="sound_default">default</string>
+    <string name="btn_import">Import a file…</string>
+    <string name="btn_restore">Use default</string>
+    <string name="lang_row">Language: %s</string>
+    <string name="lang_system">System</string>
+    <string name="lang_zh">中文</string>
+    <string name="lang_en">English</string>
+    <string name="btn_place">Move the deck…</string>
+    <string name="btn_about">About</string>
+    <string name="about_version">BeatPad %s</string>
+    <string name="about_license">Font: Noto Sans (OFL). Drums: CC0 recordings from freesound.org; click and UI ticks: Kenney CC0.</string>
+    <string name="btn_coach">Show the tips again</string>
+
+    <string name="btn_turn_left">Turn left 15°</string>
+    <string name="btn_turn_right">Turn right 15°</string>
+    <string name="btn_front">Bring it in front</string>
+    <string name="btn_panel_right">Panel to the right</string>
+    <string name="btn_panel_left">Panel to the left</string>
+    <string name="btn_place_done">Done</string>
+
+    <string name="open_panel">Open panel</string>
+    <string name="level_hint">Look straight ahead</string>
+    <string name="btn_recall">Bring back</string>
+    <string name="load_ask">This beat isn\'t saved. Replace it?</string>
+    <string name="btn_replace">Replace</string>
+    <string name="front_wait">Turn to where you want it, then hold still.</string>
+    <string name="exit_note">Saved beats stay in the library.</string>
+</resources>
