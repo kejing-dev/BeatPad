@@ -40,7 +40,9 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 pico-cli app launch io.embodit.beatpad
 ```
 
-v0.1.1 模拟器 QA 两轮通过，还没在头显上核对：敲击到出声的延迟（目标 < 30 ms，`adb logcat -s BeatPad:V | grep -E 'LATENCY|STRIKE'`）、三种打法的手感、预备拍时节拍环的颜色。
+v0.1.2：去掉应用自己画的手柄射线，只留系统射线；鼓棒伸到鼓面上开始敲时，系统射线和手柄指示也一起隐藏，只看到鼓棒，抬手离开鼓台恢复。版本记录见 [CHANGELOG.md](CHANGELOG.md)。
+
+模拟器 QA 三轮通过（模拟器没有手柄，敲鼓时隐藏射线只能靠单测和代码核对），还要在头显上核对：敲鼓时只见鼓棒没有射线、抬手指向窗口时恰好一条射线、敲鼓时手和手柄仍然可见；以及敲击到出声的延迟（目标 < 30 ms，`adb logcat -s BeatPad:V | grep -E 'LATENCY|STRIKE'`）、三种打法的手感、预备拍时节拍环的颜色。
 
 ## English
 
@@ -78,7 +80,9 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 pico-cli app launch io.embodit.beatpad
 ```
 
-v0.1.1 passed two rounds of emulator QA and has not been checked on a headset yet: hit-to-sound latency (target < 30 ms, `adb logcat -s BeatPad:V | grep -E 'LATENCY|STRIKE'`), how the three ways to hit feel, and the ring colour during the count-in.
+v0.1.2: the app no longer draws its own controller ray, only the system ray is used; when a stick reaches the pad faces to drum, the system ray and controller pointer are hidden too, so you only see the sticks, and they come back when you lift away from the deck. See [CHANGELOG.md](CHANGELOG.md).
+
+Passed three rounds of emulator QA (the emulator has no controllers, so hiding the ray while drumming is covered by unit tests and code review only). Still to check on a headset: only the sticks and no ray while drumming, exactly one ray when you point at the window, hands and controllers still visible while drumming; plus hit-to-sound latency (target < 30 ms, `adb logcat -s BeatPad:V | grep -E 'LATENCY|STRIKE'`), how the three ways to hit feel, and the ring colour during the count-in.
 
 ## Credits
 
