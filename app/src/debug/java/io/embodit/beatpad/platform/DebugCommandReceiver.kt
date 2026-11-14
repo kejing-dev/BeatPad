@@ -28,6 +28,7 @@ import java.io.File
  *   page play|library|settings · sub none|sound|kit|padsound|more|about · lang zh|en|system · mute on|off · volume 0-2
  *   place · placedone · turn ±DEG · front · side left|right · pick · pickpad N · pickend · import PATH · importdrop
  *   notice NAME · exitask · wipe · dump · fly N S1,S2… · testtex on|off
+ *   limb hidden|visible|default   (device experiment only: SDK UpperLimbRenderMode, does it touch the system ray? D41 待核实)
  */
 class DebugCommandReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
@@ -41,6 +42,11 @@ class DebugCommandReceiver : BroadcastReceiver() {
         AppLog.i("CMD $cmd $a")
         fun n(i: Int) = p.getOrNull(i)?.toIntOrNull()
         when (cmd) {
+            "limb" -> {
+                val mode = when (a) { "hidden" -> com.pico.spatial.ui.platform.ability.UpperLimbRenderMode.Hidden; "visible" -> com.pico.spatial.ui.platform.ability.UpperLimbRenderMode.Visible; else -> com.pico.spatial.ui.platform.ability.UpperLimbRenderMode.Default }
+                val r = runCatching { ActiveScene.limb!!.setUpperLimbRenderMode(mode) }
+                AppLog.i("LIMB mode=$mode result=${r.getOrNull()} err=${r.exceptionOrNull()?.javaClass?.simpleName}")
+            }
             "tap" -> {
                 val hit = when (p.getOrNull(0)) {
                     "pad" -> n(1)?.let { Hit.Pad(it - 1) }; "slot", "stone" -> n(1)?.let { Hit.Slot(it - 1) }

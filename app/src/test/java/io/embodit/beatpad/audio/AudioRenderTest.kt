@@ -46,9 +46,9 @@ class AudioRenderTest {
         for (kit in KitId.entries) { m.kit = kit; for (p in 0 until PADS) { m.trigger(p, 0.8f); parts += render(m, 0.35) } }
         for (g in Grooves.all) { m.load(g.pattern, g.bpm, g.kit); m.play(); parts += render(m, Tempo.barFrames(g.bpm.toDouble(), sr) * 2 / sr); m.stop(); parts += render(m, 0.3) }
         val all = FloatArray(parts.sumOf { it.size }); var o = 0; for (p in parts) { System.arraycopy(p, 0, all, o, p.size); o += p.size }
-        Pcm.writeWav(File(out, "loudness-v0.1.1.wav"), all, 2, sr)
+        Pcm.writeWav(File(out, "loudness-v0.1.2.wav"), all, 2, sr)
         val (rms, peak) = levels(all)
-        File(out, "loudness-v0.1.1.txt").writeText("voiced RMS %.1f dBFS, peak %.1f dBFS (rendered by the app mixer at the default 75 %% master, not recorded)\n".format(rms, peak))
+        File(out, "loudness-v0.1.2.txt").writeText("voiced RMS %.1f dBFS, peak %.1f dBFS (rendered by the app mixer at the default 75 %% master, not recorded)\n".format(rms, peak))
         assertTrue("rms $rms", rms >= -20.0)
         assertTrue("peak $peak", peak <= -0.99)
     }

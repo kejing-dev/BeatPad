@@ -22,7 +22,8 @@ platform/audio/AudioEngine  AudioTrack LOW_LATENCY + SPATIALIZATION_BEHAVIOR_NEV
 platform/input/Trackers.kt  Controllers (poses, A/X B/Y edges, stick x) · Hands (index tip / palm)
 platform/Platform.kt        Graph (process store), storage (files/beats.json, prefs), import → files/imports/*.wav
 platform/ImportActivity     system document picker host (T13)
-ui/stage/StageScene.kt      deck, pads, labels, ring, stones, lanes, knob, playhead, rec key, sticks, rays, fly stones, HUD
+ui/stage/StageScene.kt      deck, pads, labels, ring, stones, lanes, knob, playhead, rec key, sticks, fly stones, HUD (no app-drawn ray: D41 更正)
+domain/beat/StickRig.kt     what rides on a controller (sticks only, 0 rays) + DrumGate (sticks at the deck → UpperLimbRenderMode.Hidden)
 ui/stage/Meshes.kt          lathe / torus / deck-body / disc meshes (all round parts ≥ 24 segments)
 ui/stage/Textures.kt        procedural walnut / brushed aluminium, text plates for 3D words
 ui/stage/input/BoardInput   factory board-input template (tap + drag + hover, names → targets)
@@ -51,6 +52,7 @@ STATE HIT STRIKE REC PLAY SLOT DRAG DROP BPM LOAD SAVE KIT PICK IMPORT PLACE DIA
 | `hold Dn` / `unhold` | freeze animation time and the count-in (D2 stays on its number) for screenshots of short states (D2, D3 flying stones) |
 | `fly N S1,S2…` | launch flying stones from pad N to steps (picture of D3) |
 | `notice NAME [ARG]` | show a window notice (IMPORT_OK "kick|1.2", IMPORT_FAIL, IMPORT_LONG, SAVED, FULL …) |
+| `limb hidden|visible|default` | device experiment: set the Stage UpperLimbRenderMode by hand (does it hide the system ray?) |
 | `exitask` · `closewindow` · `recall` · `wipe` · `dump` | misc (`recall` = settings [叫回面前]: close + level-gated reopen ahead of the head; the deck turns aside via `Arrange.onWindowOpen`) |
 
 ## Screenshot list for QA (design states[])

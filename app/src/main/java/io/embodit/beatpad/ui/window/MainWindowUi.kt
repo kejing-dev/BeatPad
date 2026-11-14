@@ -394,6 +394,7 @@ private fun PadSoundPage(st: BeatState, settings: Settings, graph: Graph) {
     CenteredPage(28.dp) {
         BackTitle(stringResource(R.string.pad_sound_title, padName), "padsound") { flow.pickEnd(true) }
         Box(Modifier.fillMaxWidth().height(if (st.notice != Notice.NONE) 120.dp else 96.dp).clip(RoundedCornerShape(24.dp)).background(Color(0xFFF3EBDD)).padding(horizontal = 18.dp, vertical = 10.dp), contentAlignment = Alignment.CenterStart) {
+            // gate:allow button-gap two text lines (current sound name + notice) inside one info card, no buttons in this Column
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Txt(stringResource(R.string.pad_sound_now, now), "padsound/now", style = PicoTheme.typography.titleMedium, color = BeatColors.Ink, maxLines = 2)
                 NoticeLine(st)
@@ -479,6 +480,7 @@ internal fun exitApp(context: Context, navigator: SpatialNavigator, graph: Graph
     graph.window.exiting = true
     runCatching { graph.flow.stop() }
     runCatching { graph.release() }
+    runCatching { io.embodit.beatpad.ui.stage.ActiveScene.limb?.setUpperLimbRenderMode(com.pico.spatial.ui.platform.ability.UpperLimbRenderMode.Default) } // D41: restore what drumming hid
     runCatching { navigator.closeWindowContainer(Containers.MAIN, Containers.MAIN_TAG) }.onFailure { AppLog.w("EXIT close window: $it") }
     runCatching { graph.window.closeStage?.invoke() }.onFailure { AppLog.w("EXIT close stage: $it") }
     val main = Handler(Looper.getMainLooper())

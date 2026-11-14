@@ -57,7 +57,7 @@ internal object Pal {
 /**
  * Shared meshes / materials / textures of the Stage, made concurrently off the main thread (resource creation waits on
  * the renderer) and kept global until [close]. Every visible part is PBR (walnut, brushed aluminium, matte rubber, brass,
- * ceramic, maple — assets._rule); unlit only for light effects (glow, ray, playhead, outlines) and text plates.
+ * ceramic, maple — assets._rule); unlit only for light effects (glow, playhead, outlines) and text plates.
  */
 internal class SceneRes private constructor() {
     private val all = ArrayList<Resource>()
@@ -80,7 +80,7 @@ internal class SceneRes private constructor() {
     lateinit var recMat: PhysicallyBasedMaterial; lateinit var recLit: PhysicallyBasedMaterial; lateinit var emptyMat: PhysicallyBasedMaterial
     lateinit var rims: List<PhysicallyBasedMaterial>; lateinit var stones: List<PhysicallyBasedMaterial>; lateinit var stonesLit: List<PhysicallyBasedMaterial>
     lateinit var stoneGrey: PhysicallyBasedMaterial
-    lateinit var glows: List<UnlitMaterial>; lateinit var pick: UnlitMaterial; lateinit var warm: UnlitMaterial; lateinit var ray: UnlitMaterial
+    lateinit var glows: List<UnlitMaterial>; lateinit var pick: UnlitMaterial; lateinit var warm: UnlitMaterial;
     lateinit var playhead: UnlitMaterial
 
     companion object {
@@ -156,7 +156,6 @@ internal class SceneRes private constructor() {
                 async(io) { r.glows = List(PADS) { unlit(Pal.PLAYHEAD, 0.0f).k() } },
                 async(io) { r.pick = unlit(Pal.GOLD).k() },
                 async(io) { r.warm = unlit(Pal.PLAYHEAD, 0.85f).k() },
-                async(io) { r.ray = unlit(Color.White, 0.55f).k() },
                 async(io) { r.playhead = unlit(Pal.PLAYHEAD).k() },
             ).awaitAll()
             r.walnut = pbr(Pal.WALNUT, 0.7f, tex = woodTex.await()).k()

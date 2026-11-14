@@ -35,6 +35,8 @@ import io.embodit.beatpad.domain.beat.Pattern
 import io.embodit.beatpad.domain.beat.RingDrag
 import io.embodit.beatpad.domain.beat.STEPS
 import io.embodit.beatpad.domain.beat.Settings
+import io.embodit.beatpad.domain.beat.StickRig
+import io.embodit.beatpad.domain.beat.DrumGate
 import io.embodit.beatpad.domain.beat.StrikeDetector
 import io.embodit.beatpad.domain.beat.Velocity
 import io.embodit.beatpad.domain.math.Quat4
@@ -91,13 +93,13 @@ class BeatFrameSystem : System() {
     override fun update(context: SceneUpdateContext) { ActiveScene.scene?.onFrame() }
 }
 
-internal object ActiveScene { @Volatile var scene: StageScene? = null }
+internal object ActiveScene { @Volatile var scene: StageScene? = null; @Volatile var limb: com.pico.spatial.ui.platform.StageUpperLimbRenderModelManager? = null }
 
 /** Ids of the Stage attachment panels (only the HUD: loading / level hint / [打开面板] after ×). */
 object PanelIds { const val HUD = "hud"; val all = listOf(HUD) }
 
 /**
- * The Stage side: the deck, the beat ring, sticks and rays. One root whose local space is Stage metres; the deck root
+ * The Stage side: the deck, the beat ring and the sticks (no app-drawn ray, D41). One root whose local space is Stage metres; the deck root
  * carries the [Layout.DeckPose]. State → entities in [render]; sticks, strikes, the playhead, animations in [onFrame]
  * (one ECS system, main thread). Pointer input arrives through the board-input template ([onTap] / drags).
  */
@@ -117,6 +119,9 @@ class StageScene(private val graph: Graph, private val context: Context) {
     val ready = mutableStateOf(false)
     /** Where the deck is from the current gaze: −1 left, 0 in view, +1 right (the window says「鼓台在你右手边」). */
     val deckSide = mutableStateOf(0)
+    /** True while the sticks are at the deck (DrumGate): StageScreen hides the system upper-limb / controller rendering. */
+    val drumming = mutableStateOf(false)
+    private val drumGate = DrumGate()
     val panelShown = androidx.compose.runtime.mutableStateMapOf<String, Boolean>()
     private var hudHolder: Entity? = null
     private var hudBound = false
@@ -157,8 +162,6 @@ class StageScene(private val graph: Graph, private val context: Context) {
     private var outline: Entity? = null
     private var deckColliders: Entity? = null
     private val sticks = arrayOfNulls<Entity>(2)
-    private val rays = arrayOfNulls<Entity>(2)
-    private val rayDots = arrayOfNulls<Entity>(2)
     private val fly = ArrayList<Fly>()
     private var ringRoot: Entity? = null
 
@@ -335,11 +338,11 @@ class StageScene(private val graph: Graph, private val context: Context) {
         // flying stones (pool of 8)
         repeat(8) { i -> fly += Fly(model(r, r.stone, r.stones[0], "fly:$i", deck, scale = Vec3(0.04f, 0.04f, 0.04f)).also { it.show(false) }) }
 
-        // sticks, rays, hit dots (Stage space)
+        // sticks only (Stage space). No ray of our own (profile D41 更正 2026-11-13): in Full Space the system already draws
+        // the controller ray; a second, self-drawn one was the v0.1.1「两个手柄射线」. StickRig is the single list of what
+        // rides on a controller, checked by RayPolicyTest.
         for (h in 0..1) {
-            sticks[h] = model(r, r.stick, r.maple, "stick:$h", root).also { it.show(false) }
-            rays[h] = model(r, r.rod, r.ray, "ray:$h", root).also { it.show(false) }
-            rayDots[h] = model(r, r.dot, r.warm, "rayDot:$h", root, scale = Vec3(0.012f, 0.012f, 0.012f)).also { it.show(false) }
+            sticks[h] = model(r, r.stick, r.maple, StickRig.stickName(h), root).also { it.show(false) }
         }
         AppLog.i("SCENE built")
     }
@@ -458,21 +461,20 @@ class StageScene(private val graph: Graph, private val context: Context) {
         val (left, right) = controllers.poses()
         val d = deckPose
         val faces = d?.let { pose -> (0 until PADS).map { PadFace(pose.toWorld(Layout.padCenter(it)), pose.dirToWorld(Layout.padNormal(it)), Layout.PAD_FACE_D / 2f) } }
+        var nearest: Float? = null
         for ((h, c) in listOf(left, right).withIndex()) {
-            val stick = sticks[h]; val ray = rays[h]; val dot = rayDots[h]
-            if (c == null) { stick?.show(false); ray?.show(false); dot?.show(false); stickDet[h].reset(); continue }
+            val stick = sticks[h]
+            if (c == null) { stick?.show(false); stickDet[h].reset(); continue }
             val (base, dir) = stickOf(c)
             stick?.place(position = base, rotation = Quat4.fromTo(Vec3.UP, dir)); stick?.show(true)
             val tip = base + dir * (Layout.STICK_LEN - 0.012f)
+            faces?.forEach { f -> val dd = (tip - f.center).length; if (nearest == null || dd < nearest!!) nearest = dd }
             if (faces != null && st.deck != Deck.LOADING) {
                 for (e in stickDet[h].feed(tip, nowNs, faces)) onStrike(e.pad, e.speed, e.timeNs, "stick-${if (h == 0) "left" else "right"}", h == 1)
             }
-            // self-drawn ray from the stick tip along the controller (D41) to the first of our surfaces
-            val fwd = c.forward
-            val len = rayLength(tip, fwd, faces) ?: 1.2f
-            ray?.place(position = tip, rotation = Quat4.fromTo(Vec3.UP, fwd), scale = Vec3(0.0012f, len, 0.0012f)); ray?.show(true)
-            dot?.place(position = tip + fwd * len); dot?.show(len < 1.19f)
         }
+        val drum = drumGate.update(st.deck, nearest, SystemClock.elapsedRealtime())
+        if (drum != drumming.value) { drumming.value = drum; AppLog.i("DRUM ${if (drum) "enter" else "leave"} deck=${st.deck.id} tip=${nearest?.let { "%.2f".format(it) }}") }
         // hands (index tip / palm), only while tracked
         if (faces != null && st.deck != Deck.LOADING) {
             hands.tips().forEachIndexed { i, tip -> if (tip != null) for (e in handDet[i].feed(tip, nowNs, faces)) onStrike(e.pad, e.speed, e.timeNs, "hand", i >= 2) else handDet[i].reset() }
@@ -497,21 +499,6 @@ class StageScene(private val graph: Graph, private val context: Context) {
         val t = Math.toRadians(Layout.STICK_DOWN_DEG.toDouble())
         val dir = c.rotation.rotate(Vec3(0f, -sin(t).toFloat(), -kotlin.math.cos(t).toFloat())).normalized()
         return (c.position + c.forward * 0.03f) to dir
-    }
-
-    private fun rayLength(o: Vec3, d: Vec3, faces: List<PadFace>?): Float? {
-        var best: Float? = null
-        faces?.forEach { f ->
-            val den = d.dot(f.normal); if (abs(den) < 1e-4f) return@forEach
-            val t = (f.center - o).dot(f.normal) / den
-            if (t > 0 && (o + d * t - f.center).length <= f.radius + 0.01f && (best == null || t < best!!)) best = t
-        }
-        deckPose?.let { p ->
-            val c = p.toWorld(Layout.RING_CENTER); val n = p.dirToWorld(Layout.ringRotation.rotate(Vec3(0f, 0f, 1f)))
-            val den = d.dot(n)
-            if (abs(den) > 1e-4f) { val t = (c - o).dot(n) / den; if (t > 0 && (o + d * t - c).length <= Layout.FRAME_R + 0.02f && (best == null || t < best!!)) best = t }
-        }
-        return best?.coerceAtMost(1.2f)
     }
 
     /** A stick or hand strike: sound now; when recording it lands on the ring via the musical frame of [timeNs]. */
@@ -833,7 +820,15 @@ class StageScene(private val graph: Graph, private val context: Context) {
 
     fun dumpLine(): String {
         val d = deckPose; val h = lastPose
-        return "deck=${d?.let { fmt(it.origin) + " yaw=" + "%.1f".format(Math.toDegrees(it.yaw.toDouble())) }} head=${h?.let { fmt(it.position) + " yaw=" + "%.1f".format(Math.toDegrees(Layout.yawOf(it.forward).toDouble())) + " pitch=" + "%.1f".format(it.pitchDeg) }} window=${graph.window.panelState} est=${graph.window.estimate?.let { fmt(it) }} ctrl=${controllers.started}"
+        return "deck=${d?.let { fmt(it.origin) + " yaw=" + "%.1f".format(Math.toDegrees(it.yaw.toDouble())) }} head=${h?.let { fmt(it.position) + " yaw=" + "%.1f".format(Math.toDegrees(Layout.yawOf(it.forward).toDouble())) + " pitch=" + "%.1f".format(it.pitchDeg) }} window=${graph.window.panelState} est=${graph.window.estimate?.let { fmt(it) }} ctrl=${controllers.started} drumming=${drumming.value} rays=${rayEntities()} sticks=${sticks.count { it != null }}"
+    }
+
+    /** Every entity under our root whose name marks a ray / ray dot (must be 0: RayPolicy). */
+    fun rayEntities(): Int {
+        var n = 0
+        fun walk(e: Entity) { if (StickRig.isRayName(e.getName())) n++; e.getChildren().forEach { walk(it) } }
+        root?.let { walk(it) }
+        return n
     }
 
     companion object {

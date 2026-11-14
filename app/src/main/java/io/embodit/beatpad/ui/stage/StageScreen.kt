@@ -61,6 +61,10 @@ fun StageScreen() {
     val context = LocalContext.current
     val graph = remember(context) { Graph.from(context) }
     val navigator = LocalSpatialNavigator.current
+    // D41 更正: no app ray; while drumming hide the Stage upper-limb / controller rendering (the only SDK knob, whether it
+    // also hides the system ray is 待核实 on the headset), restore Default when drumming ends and when the Stage goes.
+    val limb = com.pico.spatial.ui.platform.LocalStageUpperLimbRenderModelManager.current
+    ActiveScene.limb = limb
     val state by graph.flow.state.collectAsStateWithLifecycle()
     val settings by graph.flow.settings.collectAsStateWithLifecycle()
     val scene = remember(graph) { StageScene(graph, context.applicationContext) }
@@ -108,6 +112,15 @@ fun StageScreen() {
     }
 
     LaunchedEffect(state, settings, scene.ready.value) { scene.render(state, settings) }
+    val drumming = scene.drumming.value
+    LaunchedEffect(drumming) {
+        val mode = if (drumming) com.pico.spatial.ui.platform.ability.UpperLimbRenderMode.Hidden else com.pico.spatial.ui.platform.ability.UpperLimbRenderMode.Default
+        val r = runCatching { limb.setUpperLimbRenderMode(mode) }
+        AppLog.i("LIMB mode=$mode why=${if (drumming) "drum enter" else "drum leave"} ok=${r.isSuccess} result=${r.getOrNull()?.javaClass?.simpleName}")
+    }
+    DisposableEffect(limb) {
+        onDispose { runCatching { limb.setUpperLimbRenderMode(com.pico.spatial.ui.platform.ability.UpperLimbRenderMode.Default) }; AppLog.i("LIMB mode=Default why=stage dispose") }
+    }
 
     SpatialView(
         modifier = Modifier.fillMaxSize().boardInput(
